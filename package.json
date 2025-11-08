@@ -1,0 +1,49 @@
+{
+  "name": "color-scheme-checker",
+  "version": "0.0.1",
+  "description": "Check or monitor the color-scheme of html element.",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "keywords": [
+    "color-scheme",
+    "light-dark",
+    "theme",
+    "monitor"
+  ],
+  "homepage": "https://github.com/wherewhere/color-scheme-checker",
+  "bugs": {
+    "url": "https://github.com/wherewhere/color-scheme-checker/issues"
+  },
+  "license": "MIT",
+  "author": "wherewhere7",
+  "contributors": [
+    "wherewhere"
+  ],
+  "funding": [
+    {
+      "type": "patreon",
+      "url": "https://www.patreon.com/wherewhere"
+    },
+    {
+      "type": "爱发电",
+      "url": "http://afdian.com/@wherewhere"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wherewhere/color-scheme-checker.git"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.0.0",
+    "@babel/preset-typescript": "^7.0.0",
+    "@rollup/plugin-babel": "^6.0.0",
+    "@rollup/plugin-node-resolve": "^16.0.0",
+    "@types/babel__core": "^7.0.0",
+    "rollup": "^4.0.0",
+    "rollup-plugin-dts": "^6.0.0"
+  }
+}
