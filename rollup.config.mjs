@@ -4,19 +4,19 @@ import babel from "@rollup/plugin-babel";
 import dts from "rollup-plugin-dts";
 
 const resolveConfig = resolve({
-    extensions: [".ts"]
+  extensions: [".ts"]
 });
 
 const babelESFallbackConfig = babel({
-    extensions: [".ts"],
-    targets: "supports es6-module",
-    babelHelpers: "bundled"
+  extensions: [".ts"],
+  targets: "supports es6-module",
+  babelHelpers: "bundled"
 });
 
 const babelIIFEFallbackConfig = babel({
-    extensions: [".ts"],
-    targets: "supports matchMedia",
-    babelHelpers: "bundled"
+  extensions: [".ts"],
+  targets: "supports matchMedia",
+  babelHelpers: "bundled"
 });
 
 const dtsConfig = dts();
@@ -30,15 +30,15 @@ const dtsPlugin = [dtsConfig];
  * @returns {import("rollup").RollupOptions}
  */
 function getESConfig(fileName) {
-    return {
-        input: `src/${fileName}.ts`,
-        output: {
-            sourcemap: true,
-            format: "es",
-            file: `dist/${fileName}.esm.js`
-        },
-        plugins: esFallbackPlugin
-    };
+  return {
+    input: `src/${fileName}.ts`,
+    output: {
+      sourcemap: true,
+      format: "es",
+      file: `dist/${fileName}.esm.js`
+    },
+    plugins: esFallbackPlugin
+  };
 }
 
 /**
@@ -47,16 +47,16 @@ function getESConfig(fileName) {
  * @returns {import("rollup").RollupOptions}
  */
 function getIIFEConfig(fileName, name) {
-    return {
-        input: `src/${fileName}.ts`,
-        output: {
-            sourcemap: true,
-            format: "iife",
-            file: `dist/${fileName}.js`,
-            name
-        },
-        plugins: iifeFallbackPlugin
-    };
+  return {
+    input: `src/${fileName}.ts`,
+    output: {
+      sourcemap: true,
+      format: "iife",
+      file: `dist/${fileName}.js`,
+      name
+    },
+    plugins: iifeFallbackPlugin
+  };
 }
 
 /**
@@ -64,14 +64,14 @@ function getIIFEConfig(fileName, name) {
  * @returns {import("rollup").RollupOptions}
  */
 function getDTSConfig(fileName) {
-    return {
-        input: `src/${fileName}.ts`,
-        output: {
-            format: "es",
-            file: `dist/${fileName}.d.ts`,
-        },
-        plugins: dtsPlugin
-    };
+  return {
+    input: `src/${fileName}.ts`,
+    output: {
+      format: "es",
+      file: `dist/${fileName}.d.ts`,
+    },
+    plugins: dtsPlugin
+  };
 }
 
 /**
@@ -80,21 +80,21 @@ function getDTSConfig(fileName) {
  * @param {import("rollup").ModuleFormat[]} types
  */
 function* getJSConfigs(fileName, name, types) {
-    for (const type of types) {
-        switch (type) {
-            case "es":
-                yield getESConfig(fileName);
-                break;
-            case "iife":
-                yield getIIFEConfig(fileName, name);
-                break;
-            case "dts":
-                yield getDTSConfig(fileName);
-                break;
-        }
+  for (const type of types) {
+    switch (type) {
+      case "es":
+        yield getESConfig(fileName);
+        break;
+      case "iife":
+        yield getIIFEConfig(fileName, name);
+        break;
+      case "dts":
+        yield getDTSConfig(fileName);
+        break;
     }
+  }
 }
 
 export default [
-    ...getJSConfigs("index", "colorSchemeChecker", ["es", "iife", "dts"])
+  ...getJSConfigs("index", "colorSchemeChecker", ["es", "iife", "dts"])
 ];

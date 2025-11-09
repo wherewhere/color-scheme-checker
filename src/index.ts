@@ -1,13 +1,13 @@
 import {
-    isPrefersDark,
-    isDarkScheme,
-    isDark
+  isPrefersDark,
+  isDarkScheme,
+  isDarkTheme
 } from "./theme";
 import { registerColorSchemeListener } from "./monitor";
 
 export {
-    isPrefersDark,
-    isDarkScheme,
-    isDark,
-    registerColorSchemeListener
+  isPrefersDark,
+  isDarkScheme,
+  isDarkTheme,
+  registerColorSchemeListener
 };
