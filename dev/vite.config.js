@@ -4,6 +4,7 @@ import svgLoader from "vite-svg-loader";
 
 export default defineConfig({
   root: "dev",
+  base: "./",
   plugins: [
     vue({
       template: {
