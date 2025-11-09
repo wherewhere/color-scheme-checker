@@ -55,6 +55,8 @@ export default {
 </script>
 
 <style>
+@import 'https://cdn.jsdelivr.net/gh/microsoft/fluentui-blazor@dev/src/Core/wwwroot/css/reboot.css';
+
 body,
 .body {
   background: var(--neutral-fill-stealth-rest);
