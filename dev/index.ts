@@ -1,13 +1,15 @@
 import {
   provideFluentDesignSystem,
-  fluentTextField,
+  fluentCombobox,
+  fluentOption,
   baseLayerLuminance,
   StandardLuminance
 } from "@fluentui/web-components";
 
 provideFluentDesignSystem()
   .register(
-    fluentTextField()
+    fluentCombobox(),
+    fluentOption()
   );
 
 import { isDarkTheme, registerColorSchemeListener } from "../src/index";

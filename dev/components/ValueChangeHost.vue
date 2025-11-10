@@ -65,6 +65,7 @@ export default {
           }
           else {
             (element as any)[valueName] = modelValue;
+            console.log((element as any)[valueName]);
           }
           element.addEventListener(eventName, this.onValueChanged);
         }

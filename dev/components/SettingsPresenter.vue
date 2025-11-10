@@ -116,5 +116,19 @@ export default {
   .settings-nowarp .settings-presenter :deep(div.content-presenter) {
     margin: 0;
   }
+
+  .settings-keepwarp .settings-presenter {
+    flex-flow: column;
+    justify-content: normal;
+    align-items: normal;
+  }
+
+  .settings-keepwarp .settings-presenter :deep(div.header-panel) {
+    margin: 0;
+  }
+
+  .settings-keepwarp .settings-presenter :deep(div.content-presenter) {
+    margin: var(--settings-card-vertical-header-content-spacing);
+  }
 }
 </style>

@@ -3,11 +3,19 @@ import {
   isDarkScheme,
   isDarkTheme
 } from "./theme";
-import { registerColorSchemeListener } from "./monitor";
+import {
+  registerColorSchemeListener,
+  unregisterColorSchemeListener,
+  ColorSchemeObserver,
+  ColorSchemeCallback
+} from "./monitor";
 
 export {
   isPrefersDark,
   isDarkScheme,
   isDarkTheme,
-  registerColorSchemeListener
+  registerColorSchemeListener,
+  unregisterColorSchemeListener,
+  ColorSchemeObserver
 };
+export type { ColorSchemeCallback };

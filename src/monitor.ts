@@ -2,29 +2,150 @@ import { isMatchMediaSupported, isLightDarkSupported } from "./supports.js";
 import { isDarkScheme } from "./theme";
 
 /**
+ * Gets whether the specified element is in dark mode.
+ * @param isPrefersDark `true` if the prefers-color-scheme is dark; otherwise, `false`.
+ * @param element The element to check. Defaults to {@link document.documentElement}.
+ * @returns `true` if the element is in dark mode; otherwise, `false`.
+ */
+function isDarkTheme(isPrefersDark: boolean, element: HTMLElement = document.documentElement) {
+  return isLightDarkSupported ? isDarkScheme(element) : isPrefersDark;
+}
+
+import StyleObserver from "style-observer";
+
+/** The callback for color scheme changes. */
+export type ColorSchemeCallback = (/** `true` if the element is in dark mode; otherwise, `false`. */ isDark: boolean) => void;
+
+/** Observes changes in the color scheme of an element. */
+export class ColorSchemeObserver {
+  private readonly observer: StyleObserver | undefined;
+  private readonly scheme: MediaQueryList | undefined;
+  private readonly callbacks: ColorSchemeCallback[] = [];
+  private pervious: boolean | undefined;
+
+  /** The element being observed. */
+  public element: HTMLElement;
+
+  /**
+   * Initializes a new instance of the {@link ColorSchemeObserver} class.
+   * @param element The element to observe. Defaults to {@link document.documentElement}.
+   */
+  public constructor(element: HTMLElement = document.documentElement) {
+    this.element = element;
+    if (isLightDarkSupported) {
+      this.observer = new StyleObserver(mutations => {
+        for (let i = 0; i < mutations.length; i++) {
+          const mutation = mutations[i];
+          if (mutation.target instanceof HTMLElement) {
+            const isDark = isDarkScheme(mutation.target);
+            if (this.pervious !== isDark) {
+              this.pervious = isDark;
+              this.onColorSchemeChange(isDark);
+            }
+          }
+        }
+      });
+      this.observer.observe(element, "color-scheme");
+    }
+    if (isMatchMediaSupported) {
+      this.scheme = matchMedia("(prefers-color-scheme: dark)");
+      if (this.scheme && this.scheme.media !== "not all") {
+        this.scheme.addListener(this.onListenner);
+      }
+    }
+  }
+
+  /** Gets whether there are no registered callbacks. */
+  public get isEmpty() {
+    return !this.callbacks.length;
+  }
+
+  /**
+   * Registers a callback for color scheme changes.
+   * @param callback The callback to register.
+   */
+  public registerCallback(callback: ColorSchemeCallback) {
+    this.callbacks.push(callback);
+  }
+
+  /**
+   * Unregisters a callback for color scheme changes.
+   * @param callback The callback to unregister.
+   */
+  public unregisterCallback(callback: ColorSchemeCallback) {
+    const index = this.callbacks.indexOf(callback);
+    if (index !== -1) {
+      this.callbacks.splice(index, 1);
+    }
+  }
+
+  /**
+   * Handles media query list events.
+   * @param ev The media query list event.
+   */
+  private onListenner = (ev: MediaQueryListEvent) => {
+    const isDark = isDarkTheme(ev.matches, this.element);
+    if (this.pervious !== isDark) {
+      this.pervious = isDark;
+      this.onColorSchemeChange(isDark);
+    }
+  }
+
+  /**
+   * Notifies registered callbacks of color scheme changes.
+   * @param isDark `true` if the element is in dark mode; otherwise, `false`.
+   */
+  private onColorSchemeChange(isDark: boolean) {
+    for (let i = 0; i < this.callbacks.length; i++) {
+      this.callbacks[i](isDark);
+    }
+  }
+
+  /**
+   * Disposes the observer.
+   */
+  public dispose() {
+    if (this.observer) {
+      this.observer.unobserve();
+    }
+    if (this.scheme) {
+      this.scheme.removeListener(this.onListenner);
+    }
+  }
+}
+
+/** The map of observed elements to their observers. */
+const observers = new WeakMap<HTMLElement, ColorSchemeObserver>();
+
+/**
  * Registers a listener for changes in the color scheme of the specified element.
  * @param callback The callback to invoke when the color scheme changes.
  * @param element The element to check. Defaults to {@link document.documentElement}.
  */
-export function registerColorSchemeListener(callback: (/** `true` if the element is in dark mode; otherwise, `false`. */ isDark: boolean) => void, element: HTMLElement = document.documentElement) {
-  if (isLightDarkSupported) {
-    const observer = new MutationObserver(mutations => {
-      for (let i = 0; i < mutations.length; i++) {
-        const mutation = mutations[i];
-        if (mutation.type === "attributes" && mutation.attributeName === "style" && mutation.target instanceof HTMLElement) {
-          callback(isDarkScheme(mutation.target));
-        }
-      }
-    });
-    observer.observe(element, {
-      attributes: true,
-      attributeFilter: ["style"]
-    });
+export function registerColorSchemeListener(callback: ColorSchemeCallback, element: HTMLElement = document.documentElement) {
+  let observer = observers.get(element);
+  if (observer) {
+    observer.registerCallback(callback);
   }
-  else if (isMatchMediaSupported) {
-    const scheme = matchMedia("(prefers-color-scheme: dark)");
-    if (scheme && scheme.media !== "not all") {
-      scheme.addListener(e => callback(e.matches));
+  else {
+    observer = new ColorSchemeObserver(element);
+    observer.registerCallback(callback);
+    observers.set(element, observer);
+  }
+}
+
+/**
+ * Unregisters a listener for changes in the color scheme of the specified element.
+ * @param callback The callback to remove.
+ * @param element The element to check. Defaults to {@link document.documentElement}.
+ */
+export function unregisterColorSchemeListener(callback: ColorSchemeCallback, element: HTMLElement = document.documentElement) {
+  const observer = observers.get(element);
+  if (observer) {
+    observer.unregisterCallback(callback);
+    if (observer.isEmpty) {
+      observer.dispose();
+      observers.delete(element);
     }
   }
 }

@@ -1,2 +1,4 @@
 .github/
 dev/
+babel.config.json
+rollup.config.mjs
