@@ -7,6 +7,7 @@ import {
   registerColorSchemeListener,
   unregisterColorSchemeListener,
   ColorSchemeObserver,
+  ColorSchemeOptions,
   ColorSchemeCallback
 } from "./monitor";
 
@@ -18,4 +19,7 @@ export {
   unregisterColorSchemeListener,
   ColorSchemeObserver
 };
-export type { ColorSchemeCallback };
+export type {
+  ColorSchemeOptions,
+  ColorSchemeCallback
+};

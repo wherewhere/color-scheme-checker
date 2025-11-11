@@ -4,18 +4,18 @@ import babel from "@rollup/plugin-babel";
 import dts from "rollup-plugin-dts";
 
 const resolveConfig = resolve({
-  extensions: [".ts"]
+  extensions: [".js", ".ts"]
 });
 
 const babelESFallbackConfig = babel({
-  extensions: [".ts"],
+  extensions: [".js", ".ts"],
   targets: "supports es6-module",
   babelHelpers: "bundled"
 });
 
 const babelIIFEFallbackConfig = babel({
-  extensions: [".ts"],
-  targets: "supports matchMedia",
+  extensions: [".js", ".ts"],
+  targets: "supports matchmedia",
   babelHelpers: "bundled"
 });
 

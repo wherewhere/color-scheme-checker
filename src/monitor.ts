@@ -1,27 +1,37 @@
 import { isMatchMediaSupported, isLightDarkSupported } from "./supports.js";
 import { isDarkScheme } from "./theme";
 
-/**
- * Gets whether the specified element is in dark mode.
- * @param isPrefersDark `true` if the prefers-color-scheme is dark; otherwise, `false`.
- * @param element The element to check. Defaults to {@link document.documentElement}.
- * @returns `true` if the element is in dark mode; otherwise, `false`.
- */
-function isDarkTheme(isPrefersDark: boolean, element: HTMLElement = document.documentElement) {
-  return isLightDarkSupported ? isDarkScheme(element) : isPrefersDark;
-}
-
 import StyleObserver from "style-observer";
+
+/** The options for the style observer. */
+export type ColorSchemeOptions = {
+  /** Whether to check the color scheme changes. Default is `true` if the browser supports `light-dark` feature; otherwise, `false`. */
+  checkColorScheme: boolean;
+}
 
 /** The callback for color scheme changes. */
 export type ColorSchemeCallback = (/** `true` if the element is in dark mode; otherwise, `false`. */ isDark: boolean) => void;
 
 /** Observes changes in the color scheme of an element. */
 export class ColorSchemeObserver {
-  private readonly observer: StyleObserver | undefined;
-  private readonly scheme: MediaQueryList | undefined;
+  /** @type {boolean} */
+  private readonly checkColorScheme: boolean;
+  /** @type {ColorSchemeCallback[]} */
   private readonly callbacks: ColorSchemeCallback[] = [];
+  /** @type {boolean | undefined} */
   private pervious: boolean | undefined;
+
+  /** 
+   * The style observer for detecting color scheme changes.
+   * @remarks `undefined` if {@link ColorSchemeOptions.checkColorScheme} is `false`.
+   */
+  public readonly observer: StyleObserver | undefined;
+
+  /** 
+   * The media query list for detecting prefers-color-scheme changes.
+   * @remarks `undefined` if the browser not supports `matchMedia`.
+   */
+  public readonly scheme: MediaQueryList | undefined;
 
   /** The element being observed. */
   public element: HTMLElement;
@@ -29,10 +39,12 @@ export class ColorSchemeObserver {
   /**
    * Initializes a new instance of the {@link ColorSchemeObserver} class.
    * @param element The element to observe. Defaults to {@link document.documentElement}.
+   * @param options The options for the style observer.
    */
-  public constructor(element: HTMLElement = document.documentElement) {
+  public constructor(element: HTMLElement = document.documentElement, options: ColorSchemeOptions = { checkColorScheme: isLightDarkSupported }) {
     this.element = element;
-    if (isLightDarkSupported) {
+    this.checkColorScheme = options.checkColorScheme;
+    if (this.checkColorScheme) {
       this.observer = new StyleObserver(mutations => {
         for (let i = 0; i < mutations.length; i++) {
           const mutation = mutations[i];
@@ -80,11 +92,21 @@ export class ColorSchemeObserver {
   }
 
   /**
+   * Gets whether the specified element is in dark mode.
+   * @param {boolean} isPrefersDark `true` if the prefers-color-scheme is dark; otherwise, `false`.
+   * @param {HTMLElement} element The element to check. Defaults to {@link document.documentElement}.
+   * @returns {boolean} `true` if the element is in dark mode; otherwise, `false`.
+   */
+  private isDarkTheme(isPrefersDark: boolean, element: HTMLElement = document.documentElement): boolean {
+    return this.checkColorScheme ? isDarkScheme(element) : isPrefersDark;
+  }
+
+  /**
    * Handles media query list events.
-   * @param ev The media query list event.
+   * @param {MediaQueryListEvent} ev The media query list event.
    */
   private onListenner = (ev: MediaQueryListEvent) => {
-    const isDark = isDarkTheme(ev.matches, this.element);
+    const isDark = this.isDarkTheme(ev.matches, this.element);
     if (this.pervious !== isDark) {
       this.pervious = isDark;
       this.onColorSchemeChange(isDark);
@@ -93,12 +115,19 @@ export class ColorSchemeObserver {
 
   /**
    * Notifies registered callbacks of color scheme changes.
-   * @param isDark `true` if the element is in dark mode; otherwise, `false`.
+   * @param {boolean} isDark `true` if the element is in dark mode; otherwise, `false`.
    */
   private onColorSchemeChange(isDark: boolean) {
     for (let i = 0; i < this.callbacks.length; i++) {
       this.callbacks[i](isDark);
     }
+  }
+
+  /**
+   * Clears all registered callbacks.
+   */
+  public clear() {
+    this.callbacks.length = 0;
   }
 
   /**
