@@ -31,7 +31,7 @@ const dtsPlugin = [dtsConfig];
  */
 function getESConfig(fileName) {
   return {
-    input: `src/${fileName}.ts`,
+    input: `${fileName}.ts`,
     output: {
       sourcemap: true,
       format: "es",
@@ -48,7 +48,7 @@ function getESConfig(fileName) {
  */
 function getIIFEConfig(fileName, name) {
   return {
-    input: `src/${fileName}.ts`,
+    input: `${fileName}.ts`,
     output: {
       sourcemap: true,
       format: "iife",
@@ -65,7 +65,7 @@ function getIIFEConfig(fileName, name) {
  */
 function getDTSConfig(fileName) {
   return {
-    input: `src/${fileName}.ts`,
+    input: `${fileName}.ts`,
     output: {
       format: "es",
       file: `dist/${fileName}.d.ts`,

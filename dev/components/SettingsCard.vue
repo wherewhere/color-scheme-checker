@@ -42,7 +42,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .settings-card {
   display: block;
   box-sizing: border-box;
@@ -52,9 +52,9 @@ export default {
   border-radius: calc(var(--control-corner-radius) * 1px);
   box-shadow: var(--elevation-shadow-card-rest);
   --settings-card-padding: calc(var(--design-unit) * 4px);
-}
 
-.settings-card :deep(.presenter) {
-  padding: var(--settings-card-padding);
+  :deep(.presenter) {
+    padding: var(--settings-card-padding);
+  }
 }
 </style>

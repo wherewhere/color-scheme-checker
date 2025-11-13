@@ -44,7 +44,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .settings-presenter {
   --settings-card-description-font-size: var(--type-ramp-minus-1-font-size);
   --settings-card-header-icon-max-size: var(--type-ramp-base-line-height);
@@ -53,82 +53,80 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
 
-.settings-presenter :deep(div.header-root) {
-  display: flex;
-  align-items: center;
-  flex: 1;
-}
-
-.settings-presenter :deep(div.icon-holder) {
-  max-width: var(--settings-card-header-icon-max-size);
-  max-height: var(--settings-card-header-icon-max-size);
-  margin: var(--settings-card-header-icon-margin);
-  fill: currentColor;
-}
-
-.settings-presenter :deep(div.header-panel) {
-  display: flex;
-  flex-direction: column;
-  margin: 0 calc(var(--design-unit) * 6px) 0 0;
-}
-
-.settings-presenter :deep(span.description) {
-  font-size: var(--settings-card-description-font-size);
-  color: var(--neutral-fill-strong-hover);
-}
-
-.settings-presenter :deep(div.content-presenter) {
-  display: grid;
-}
-
-.settings-presenter :deep(a.text-button) {
-  font-weight: bold;
-  text-decoration: inherit;
-}
-
-@media (max-width: 640px) {
-  .settings-presenter {
-    flex-flow: column;
-    justify-content: normal;
-    align-items: normal;
-  }
-
-  .settings-presenter :deep(div.header-panel) {
-    margin: 0;
-  }
-
-  .settings-presenter :deep(div.content-presenter) {
-    margin: var(--settings-card-vertical-header-content-spacing);
-  }
-
-  .settings-nowarp .settings-presenter {
-    flex-flow: row;
-    justify-content: space-between;
+  :deep(div.header-root) {
+    display: flex;
     align-items: center;
+    flex: 1;
   }
 
-  .settings-nowarp .settings-presenter :deep(div.header-panel) {
+  :deep(div.icon-holder) {
+    max-width: var(--settings-card-header-icon-max-size);
+    max-height: var(--settings-card-header-icon-max-size);
+    margin: var(--settings-card-header-icon-margin);
+    fill: currentColor;
+  }
+
+  :deep(div.header-panel) {
+    display: flex;
+    flex-direction: column;
     margin: 0 calc(var(--design-unit) * 6px) 0 0;
   }
 
-  .settings-nowarp .settings-presenter :deep(div.content-presenter) {
-    margin: 0;
+  :deep(span.description) {
+    font-size: var(--settings-card-description-font-size);
+    color: var(--neutral-fill-strong-hover);
   }
 
-  .settings-keepwarp .settings-presenter {
+  :deep(div.content-presenter) {
+    display: grid;
+  }
+
+  :deep(a.text-button) {
+    font-weight: bold;
+    text-decoration: inherit;
+  }
+
+  @media (max-width: 640px) {
     flex-flow: column;
     justify-content: normal;
     align-items: normal;
-  }
 
-  .settings-keepwarp .settings-presenter :deep(div.header-panel) {
-    margin: 0;
-  }
+    :deep(div.header-panel) {
+      margin: 0;
+    }
 
-  .settings-keepwarp .settings-presenter :deep(div.content-presenter) {
-    margin: var(--settings-card-vertical-header-content-spacing);
+    :deep(div.content-presenter) {
+      margin: var(--settings-card-vertical-header-content-spacing);
+    }
+
+    .settings-nowarp & {
+      flex-flow: row;
+      justify-content: space-between;
+      align-items: center;
+
+      :deep(div.header-panel) {
+        margin: 0 calc(var(--design-unit) * 6px) 0 0;
+      }
+
+      :deep(div.content-presenter) {
+        margin: 0;
+      }
+    }
+
+    .settings-keepwarp & {
+      flex-flow: column;
+      justify-content: normal;
+      align-items: normal;
+
+      :deep(div.header-panel) {
+        margin: 0;
+      }
+
+      :deep(div.content-presenter) {
+        margin: var(--settings-card-vertical-header-content-spacing);
+      }
+    }
   }
 }
 </style>

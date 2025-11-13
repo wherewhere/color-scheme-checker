@@ -2,14 +2,14 @@ import {
   isPrefersDark,
   isDarkScheme,
   isDarkTheme
-} from "./theme";
+} from "./src/theme";
 import {
   registerColorSchemeListener,
   unregisterColorSchemeListener,
   ColorSchemeObserver,
   ColorSchemeOptions,
   ColorSchemeCallback
-} from "./monitor";
+} from "./src/monitor";
 
 export {
   isPrefersDark,

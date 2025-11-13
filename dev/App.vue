@@ -3,14 +3,14 @@
     <h1 id="title">Color Scheme Checker</h1>
     <SettingsGroup>
       <template #header>
-        <h2 class="unset">Tests</h2>
+        <h2 id="tests" class="unset">Tests</h2>
       </template>
       <SettingsCard>
         <template #icon>
           <Color20Regular />
         </template>
         <template #header>
-          <h3 class="unset">Set Theme</h3>
+          <h3 id="tests-theme" class="unset">Set Theme</h3>
         </template>
         <template #description>
           {{ message }}
@@ -30,29 +30,60 @@
         </ValueChangeHost>
       </SettingsCard>
     </SettingsGroup>
+    <SettingsGroup>
+      <template #header>
+        <h2 id="about" class="unset">About</h2>
+      </template>
+      <SettingsExpander>
+        <template #icon>
+          <Info20Regular />
+        </template>
+        <template #header>
+          <h3 id="about-about" class="unset">{{ package.name }} v{{ package.version }}</h3>
+        </template>
+        <template #description>
+          {{ package.description }}
+        </template>
+        <div class="setting-expander-content-grid" style="overflow-y: auto;">
+          <ReadMe />
+        </div>
+      </SettingsExpander>
+    </SettingsGroup>
   </div>
 </template>
 
 <script lang="ts">
-import type _ from "vite-svg-loader";
-import { isDarkTheme, registerColorSchemeListener } from "../src/index";
+import { isDarkTheme } from "../src/theme";
+import { registerColorSchemeListener } from "../src/monitor";
+import { name, description, version } from "../package.json";
 import ValueChangeHost from "./components/ValueChangeHost.vue";
 import SettingsCard from "./components/SettingsCard.vue";
+import SettingsExpander from "./components/SettingsExpander.vue";
 import SettingsGroup from "./components/SettingsGroup.vue";
+import ReadMe from "../README.md";
 import Color20Regular from "@fluentui/svg-icons/icons/color_20_regular.svg?component";
+import Info20Regular from "@fluentui/svg-icons/icons/info_20_regular.svg?component";
 
 export default {
   name: "App",
   components: {
     ValueChangeHost,
     SettingsCard,
+    SettingsExpander,
     SettingsGroup,
-    Color20Regular
+    ReadMe,
+    Color20Regular,
+    Info20Regular
   },
   data() {
     return {
       isDark: false,
-      scheme: "light dark"
+      scheme: "light dark",
+      package: {
+        name,
+        description,
+        version
+      }
     }
   },
   computed: {
@@ -74,33 +105,32 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
+@use 'highlight.js/scss/vs2015.scss';
 @import 'https://cdn.jsdelivr.net/gh/microsoft/fluentui-blazor@dev/src/Core/wwwroot/css/reboot.css';
 
 * {
   transition: background-color 0.083s ease-in-out;
 }
 
+:root {
+  --font-monospace: "Cascadia Code NF", "Cascadia Code PL", "Cascadia Code", "Cascadia Next SC", "Cascadia Next TC", "Cascadia Next JP", Consolas, "Courier New", "Liberation Mono", SFMono-Regular, Menlo, Monaco, monospace;
+}
+
 body {
   background: var(--neutral-fill-stealth-rest);
   padding: 0 16px 16px;
   transition: padding 0.083s ease-in-out, background-color 0.083s ease-in-out;
-}
 
-@media (min-width: 640px) {
-  body {
+  @media (min-width: 640px) {
     padding: 0 32px 24px;
   }
-}
 
-@media (min-width: 1007px) {
-  body {
+  @media (min-width: 1007px) {
     padding: 0 64px 24px;
   }
-}
 
-@media (min-width: 1372px) {
-  body {
+  @media (min-width: 1372px) {
     padding: 0 128px 24px;
   }
 }
@@ -117,6 +147,11 @@ body {
 :deep(.stack-vertical) {
   display: flex;
   flex-direction: column;
+}
+
+:deep(.stack-horizontal) {
+  display: flex;
+  flex-direction: row;
 }
 
 :deep(h6.unset),

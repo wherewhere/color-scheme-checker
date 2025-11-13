@@ -1,5 +1,7 @@
 import {
   provideFluentDesignSystem,
+  fluentAccordion,
+  fluentAccordionItem,
   fluentCombobox,
   fluentOption,
   baseLayerLuminance,
@@ -8,11 +10,14 @@ import {
 
 provideFluentDesignSystem()
   .register(
+    fluentAccordion(),
+    fluentAccordionItem(),
     fluentCombobox(),
     fluentOption()
   );
 
-import { isDarkTheme, registerColorSchemeListener } from "../src/index";
+import { isDarkTheme } from "../src/theme";
+import { registerColorSchemeListener } from "../src/monitor";
 
 function applyTheme(isDark: boolean) {
   baseLayerLuminance.withDefault(isDark ? StandardLuminance.DarkMode : StandardLuminance.LightMode);

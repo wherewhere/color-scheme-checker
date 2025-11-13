@@ -41,9 +41,9 @@ export class ColorSchemeObserver {
    * @param element The element to observe. Defaults to {@link document.documentElement}.
    * @param options The options for the style observer.
    */
-  public constructor(element: HTMLElement = document.documentElement, options: ColorSchemeOptions = { checkColorScheme: isLightDarkSupported }) {
+  public constructor(element: HTMLElement = document.documentElement, options: Partial<ColorSchemeOptions> = {}) {
     this.element = element;
-    this.checkColorScheme = options.checkColorScheme;
+    this.checkColorScheme = options.checkColorScheme ?? isLightDarkSupported;
     if (this.checkColorScheme) {
       this.observer = new StyleObserver(mutations => {
         for (let i = 0; i < mutations.length; i++) {
