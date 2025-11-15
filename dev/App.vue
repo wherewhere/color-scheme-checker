@@ -44,15 +44,16 @@
         <template #description>
           {{ package.description }}
         </template>
-        <div class="setting-expander-content-grid" style="overflow-y: auto;">
+        <Markdown class="setting-expander-content-grid" style="overflow-y: auto;">
           <ReadMe />
-        </div>
+        </Markdown>
       </SettingsExpander>
     </SettingsGroup>
   </div>
 </template>
 
 <script lang="ts">
+import "./types";
 import { isDarkTheme } from "../src/theme";
 import { registerColorSchemeListener } from "../src/monitor";
 import { name, description, version } from "../package.json";
@@ -60,6 +61,7 @@ import ValueChangeHost from "./components/ValueChangeHost.vue";
 import SettingsCard from "./components/SettingsCard.vue";
 import SettingsExpander from "./components/SettingsExpander.vue";
 import SettingsGroup from "./components/SettingsGroup.vue";
+import Markdown from "./components/Markdown.vue";
 import ReadMe from "../README.md";
 import Color20Regular from "@fluentui/svg-icons/icons/color_20_regular.svg?component";
 import Info20Regular from "@fluentui/svg-icons/icons/info_20_regular.svg?component";
@@ -71,6 +73,7 @@ export default {
     SettingsCard,
     SettingsExpander,
     SettingsGroup,
+    Markdown,
     ReadMe,
     Color20Regular,
     Info20Regular
@@ -106,15 +109,20 @@ export default {
 </script>
 
 <style lang="scss">
-@use 'highlight.js/scss/vs2015.scss';
-@import 'https://cdn.jsdelivr.net/gh/microsoft/fluentui-blazor@dev/src/Core/wwwroot/css/reboot.css';
+@use "sass:meta";
+@use "github:microsoft/fluentui-blazor?branch=dev&path=/src/Core/wwwroot/css/reboot.css";
+@use "highlight.js/scss/vs.scss";
 
-* {
-  transition: background-color 0.083s ease-in-out;
+@media (prefers-color-scheme: dark) {
+  @include meta.load-css("highlight.js/scss/vs2015.scss");
 }
 
 :root {
   --font-monospace: "Cascadia Code NF", "Cascadia Code PL", "Cascadia Code", "Cascadia Next SC", "Cascadia Next TC", "Cascadia Next JP", Consolas, "Courier New", "Liberation Mono", SFMono-Regular, Menlo, Monaco, monospace;
+}
+
+* {
+  transition: background-color 0.083s ease-in-out;
 }
 
 body {
