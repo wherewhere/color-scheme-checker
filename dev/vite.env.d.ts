@@ -2,8 +2,8 @@
 /// <reference types="vite-svg-loader" />
 
 declare module "*.md" {
-  import type { ComponentOptions } from "vue";
-
-  const Component: ComponentOptions;
-  export default Component;
+  import type { defineComponent, ComponentObjectPropsOptions, HTMLAttributes } from "vue";
+  const frontmatter: { [key: string]: string | typeof frontmatter };
+  const component: ReturnType<typeof defineComponent<HTMLAttributes, ComponentObjectPropsOptions, string, {}, {}, string, { frontmatter: typeof frontmatter }>>;
+  export default component;
 }

@@ -15,6 +15,7 @@
         <template #description>
           {{ message }}
         </template>
+        <!-- @vue-generic {Combobox, "value" } -->
         <ValueChangeHost v-model="scheme" value-name="value" event-name="change" style="display: inherit;">
           <fluent-combobox :current-value="scheme" placeholder="inherit" autocomplete="both" style="min-width: 0;">
             <fluent-option>normal</fluent-option>
@@ -39,10 +40,10 @@
           <Info20Regular />
         </template>
         <template #header>
-          <h3 id="about-about" class="unset">{{ package.name }} v{{ package.version }}</h3>
+          <h3 id="about-about" class="unset">{{ name }} v{{ version }}</h3>
         </template>
         <template #description>
-          {{ package.description }}
+          {{ description }}
         </template>
         <Markdown class="setting-expander-content-grid" style="overflow-y: auto;">
           <ReadMe />
@@ -52,11 +53,13 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import "./types";
+import { computed, onMounted, shallowRef, watch } from "vue";
 import { isDarkTheme } from "../src/theme";
 import { registerColorSchemeListener } from "../src/monitor";
 import { name, description, version } from "../package.json";
+import type { Combobox } from "@fluentui/web-components";
 import ValueChangeHost from "./components/ValueChangeHost.vue";
 import SettingsCard from "./components/SettingsCard.vue";
 import SettingsExpander from "./components/SettingsExpander.vue";
@@ -66,46 +69,21 @@ import ReadMe from "../README.md";
 import Color20Regular from "@fluentui/svg-icons/icons/color_20_regular.svg?component";
 import Info20Regular from "@fluentui/svg-icons/icons/info_20_regular.svg?component";
 
-export default {
-  name: "App",
-  components: {
-    ValueChangeHost,
-    SettingsCard,
-    SettingsExpander,
-    SettingsGroup,
-    Markdown,
-    ReadMe,
-    Color20Regular,
-    Info20Regular
-  },
-  data() {
-    return {
-      isDark: false,
-      scheme: "light dark",
-      package: {
-        name,
-        description,
-        version
-      }
-    }
-  },
-  computed: {
-    message() {
-      return `Is dark theme: ${this.isDark}`;
-    }
-  },
-  watch: {
-    scheme(newValue: string) {
-      document.documentElement.style.colorScheme = newValue;
-    }
-  },
-  mounted() {
-    const root = this.$refs.root as HTMLElement;
-    this.isDark = isDarkTheme(root);
-    registerColorSchemeListener(isDark => this.isDark = isDark, root);
-    document.documentElement.style.colorScheme = this.scheme;
-  }
-};
+const isDark = shallowRef(false);
+const scheme = shallowRef<string>();
+const message = computed(() => `Is dark theme: ${isDark.value}`);
+
+watch(
+  scheme,
+  () => document.documentElement.style.colorScheme = scheme.value!
+);
+
+const root = shallowRef<HTMLElement>();
+onMounted(() => {
+  isDark.value = isDarkTheme(root.value);
+  registerColorSchemeListener(x => isDark.value = x, root.value);
+  scheme.value = getComputedStyle(document.documentElement).colorScheme;
+});
 </script>
 
 <style lang="scss">
@@ -145,7 +123,7 @@ body {
 </style>
 
 <style scoped>
-:deep(#title) {
+#title {
   margin: 24px 0;
   font-size: 28px;
   font-weight: 600;
@@ -176,10 +154,10 @@ body {
   line-height: inherit;
 }
 
-:deep(fluent-select::part(listbox)),
-:deep(fluent-select .listbox),
-:deep(fluent-combobox::part(listbox)),
-:deep(fluent-combobox .listbox) {
+:deep(fluent-select)::part(listbox),
+:deep(fluent-select) .listbox,
+:deep(fluent-combobox)::part(listbox),
+:deep(fluent-combobox) .listbox {
   max-height: calc(var(--base-height-multiplier) * 30px);
 }
 </style>

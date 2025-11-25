@@ -1,6 +1,6 @@
-import { nextTick, toRaw, Directive, DirectiveHook } from "vue";
+import { toRaw, type Directive, type DirectiveHook } from "vue";
 import { registerColorSchemeListener, unregisterColorSchemeListener } from "../../src/monitor";
-import { fillColor, Swatch } from "@fluentui/web-components";
+import { fillColor, type Swatch } from "@fluentui/web-components";
 import type { DesignToken } from "@microsoft/fast-foundation";
 
 const observer = new WeakMap<HTMLElement, () => void>();
@@ -19,7 +19,7 @@ function removeListener(element: HTMLElement) {
   }
 }
 
-const register: DirectiveHook<HTMLElement, any, DesignToken<Swatch>, string, any> = async (element, binding) => {
+const register: DirectiveHook<HTMLElement, any, DesignToken<Swatch> | undefined, string, any> = async (element, binding) => {
   if (element instanceof HTMLElement) {
     if (binding.value !== binding.oldValue) {
       const color = toRaw(binding.value);
@@ -34,13 +34,13 @@ const register: DirectiveHook<HTMLElement, any, DesignToken<Swatch>, string, any
   }
 };
 
-const unregister: DirectiveHook<HTMLElement, any, DesignToken<Swatch>, string, any> = element => {
+const unregister: DirectiveHook<HTMLElement, any, DesignToken<Swatch> | undefined, string, any> = element => {
   if (element instanceof HTMLElement) {
     removeListener(element);
   }
 };
 
-const directive: Directive<HTMLElement, DesignToken<Swatch>> = {
+const directive: Directive<HTMLElement, DesignToken<Swatch> | undefined> = {
   mounted: register,
   updated: register,
   unmounted: unregister

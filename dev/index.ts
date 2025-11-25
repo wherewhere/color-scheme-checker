@@ -25,7 +25,7 @@ function applyTheme(isDark: boolean) {
 applyTheme(isDarkTheme());
 registerColorSchemeListener(applyTheme);
 
-import { createApp } from "vue"
-import App from "./App.vue"
+import { createApp, defineComponent } from "vue";
+import App from "./App.vue";
 
-createApp(App).mount("#vue-app")
+createApp(App).mount("#vue-app");
