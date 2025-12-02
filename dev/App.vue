@@ -56,9 +56,10 @@
 <script lang="ts" setup>
 import "./types";
 import { computed, onMounted, shallowRef, watch } from "vue";
+import { useSeoMeta } from "@unhead/vue";
 import { isDarkTheme } from "../src/theme";
 import { registerColorSchemeListener } from "../src/monitor";
-import { name, description, version } from "../package.json";
+import { name, description, keywords, version } from "../package.json";
 import type { Combobox } from "@fluentui/web-components";
 import ValueChangeHost from "./components/ValueChangeHost.vue";
 import SettingsCard from "./components/SettingsCard.vue";
@@ -68,6 +69,30 @@ import Markdown from "./components/Markdown.vue";
 import ReadMe from "../README.md";
 import Color20Regular from "@fluentui/svg-icons/icons/color_20_regular.svg?component";
 import Info20Regular from "@fluentui/svg-icons/icons/info_20_regular.svg?component";
+
+const author = "wherewhere";
+useSeoMeta({
+  // Basic SEO
+  title: name,
+  description,
+  author: author,
+  keywords: keywords.join(", "),
+
+  // Open Graph
+  ogTitle: name,
+  ogDescription: description,
+  ogType: "website",
+  ogLocale: "en_US",
+  ogSiteName: name,
+
+  // Twitter
+  twitterCard: "summary",
+  twitterSite: "@wherewhere7",
+
+  // Product specific (structured data will be generated)
+  articleAuthor: [author],
+  articleTag: keywords
+});
 
 const isDark = shallowRef(false);
 const scheme = shallowRef<string>();

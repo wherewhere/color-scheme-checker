@@ -7,6 +7,12 @@ const resolveConfig = resolve({
   extensions: [".js", ".ts"]
 });
 
+const babelESConfig = babel({
+    extensions: [".ts"],
+    targets: "defaults",
+    babelHelpers: "bundled"
+});
+
 const babelESFallbackConfig = babel({
   extensions: [".js", ".ts"],
   targets: "supports es6-module",
@@ -21,6 +27,7 @@ const babelIIFEFallbackConfig = babel({
 
 const dtsConfig = dts();
 
+const esPlugin = [resolveConfig, babelESConfig];
 const esFallbackPlugin = [resolveConfig, babelESFallbackConfig];
 const iifeFallbackPlugin = [resolveConfig, babelIIFEFallbackConfig];
 const dtsPlugin = [dtsConfig];
@@ -31,11 +38,28 @@ const dtsPlugin = [dtsConfig];
  */
 function getESConfig(fileName) {
   return {
+    external: ["style-observer"],
     input: `${fileName}.ts`,
     output: {
       sourcemap: true,
       format: "es",
       file: `dist/${fileName}.esm.js`
+    },
+    plugins: esPlugin
+  };
+}
+
+/**
+ * @param {string} fileName
+ * @returns {import("rollup").RollupOptions}
+ */
+function getESBrowserConfig(fileName) {
+  return {
+    input: `${fileName}.ts`,
+    output: {
+      sourcemap: true,
+      format: "es",
+      file: `dist/${fileName}.esm.browser.js`
     },
     plugins: esFallbackPlugin
   };
@@ -52,7 +76,7 @@ function getIIFEConfig(fileName, name) {
     output: {
       sourcemap: true,
       format: "iife",
-      file: `dist/${fileName}.js`,
+      file: `dist/${fileName}.global.js`,
       name
     },
     plugins: iifeFallbackPlugin
@@ -68,7 +92,7 @@ function getDTSConfig(fileName) {
     input: `${fileName}.ts`,
     output: {
       format: "es",
-      file: `dist/${fileName}.d.ts`,
+      file: `dist/${fileName}.esm.d.ts`,
     },
     plugins: dtsPlugin
   };
@@ -84,6 +108,7 @@ function* getJSConfigs(fileName, name, types) {
     switch (type) {
       case "es":
         yield getESConfig(fileName);
+        yield getESBrowserConfig(fileName);
         break;
       case "iife":
         yield getIIFEConfig(fileName, name);

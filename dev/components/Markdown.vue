@@ -1,5 +1,5 @@
 <template>
-  <div class="markdown-body">
+  <div>
     <slot></slot>
   </div>
 </template>

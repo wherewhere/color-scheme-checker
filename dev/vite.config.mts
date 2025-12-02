@@ -4,7 +4,7 @@ import svgLoader from "vite-svg-loader";
 import markdown from "unplugin-vue-markdown/vite";
 import hljs from "markdown-it-highlightjs";
 import simpleHtmlPlugin from "vite-plugin-simple-html";
-import githubImporter from "./helpers/github-importer.mjs";
+import githubImporter from "./helpers/github-importer";
 
 export default defineConfig({
   root: "dev",
@@ -20,10 +20,6 @@ export default defineConfig({
     }),
     svgLoader(),
     markdown({
-      markdownItOptions: {
-        html: true,
-        linkify: true
-      },
       markdownItUses: [hljs]
     }),
     simpleHtmlPlugin({
