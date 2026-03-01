@@ -5,6 +5,7 @@ import markdown from "unplugin-vue-markdown/vite";
 import hljs from "markdown-it-highlightjs";
 import simpleHtmlPlugin from "vite-plugin-simple-html";
 import githubImporter from "./helpers/github-importer";
+import cssnano from "cssnano";
 
 export default defineConfig({
   root: "dev",
@@ -36,6 +37,13 @@ export default defineConfig({
       scss: {
         importers: [githubImporter]
       }
+    },
+    postcss: {
+      plugins: [
+        cssnano({
+          preset: "advanced"
+        })
+      ]
     },
     devSourcemap: true
   },

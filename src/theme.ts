@@ -27,9 +27,9 @@ export function isDarkScheme(element: HTMLElement = document.documentElement) {
     default:
       const div = document.createElement("div");
       div.style.color = "light-dark(tan, red)";
-      document.body.appendChild(div);
-      const isDarkMode = getComputedStyle(div).color !== "rgb(210, 180, 140)"
-      document.body.removeChild(div);
+      element.appendChild(div);
+      const isDarkMode = getComputedStyle(div).color === "rgb(255, 0, 0)"
+      element.removeChild(div);
       return isDarkMode;
   }
 }

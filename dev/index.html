@@ -8,6 +8,38 @@
     <meta name="theme-color" content="#fbfbfb" media="(prefers-color-scheme: light)">
     <meta name="theme-color" content="#272727" media="(prefers-color-scheme: dark)">
     <style>
+        :root {
+            --neutral-fill-stealth-rest: #fbfbfb;
+        }
+
+        body,
+        .body,
+        #vue-app div.cover {
+            background: #fbfbfb;
+        }
+
+        body {
+            padding: 0 16px 16px;
+        }
+
+        @media (min-width: 640px) {
+            body {
+                padding: 0 32px 24px;
+            }
+        }
+
+        @media (min-width: 1007px) {
+            body {
+                padding: 0 64px 24px;
+            }
+        }
+
+        @media (min-width: 1372px) {
+            body {
+                padding: 0 128px 24px;
+            }
+        }
+
         #vue-app div.cover {
             position: fixed;
             top: 0;
@@ -17,7 +49,6 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: #fbfbfb;
             z-index: 3;
         }
 
@@ -43,6 +74,12 @@
         }
 
         @media (prefers-color-scheme: dark) {
+            :root {
+                --neutral-fill-stealth-rest: #272727;
+            }
+
+            body,
+            .body,
             #vue-app div.cover {
                 background: #272727;
             }
@@ -52,6 +89,12 @@
             }
         }
 
+        :root {
+            --neutral-fill-stealth-rest: light-dark(#fbfbfb, #272727);
+        }
+
+        body,
+        .body,
         #vue-app div.cover {
             background: light-dark(#fbfbfb, #272727);
         }

@@ -41,9 +41,9 @@ function getESConfig(fileName) {
     external: ["style-observer"],
     input: `${fileName}.ts`,
     output: {
-      sourcemap: true,
+      file: `dist/${fileName}.esm.js`,
       format: "es",
-      file: `dist/${fileName}.esm.js`
+      sourcemap: true
     },
     plugins: esPlugin
   };
@@ -57,9 +57,9 @@ function getESBrowserConfig(fileName) {
   return {
     input: `${fileName}.ts`,
     output: {
-      sourcemap: true,
+      file: `dist/${fileName}.esm.browser.js`,
       format: "es",
-      file: `dist/${fileName}.esm.browser.js`
+      sourcemap: true
     },
     plugins: esFallbackPlugin
   };
@@ -74,10 +74,10 @@ function getIIFEConfig(fileName, name) {
   return {
     input: `${fileName}.ts`,
     output: {
-      sourcemap: true,
-      format: "iife",
       file: `dist/${fileName}.global.js`,
-      name
+      format: "iife",
+      name,
+      sourcemap: true
     },
     plugins: iifeFallbackPlugin
   };
@@ -91,8 +91,8 @@ function getDTSConfig(fileName) {
   return {
     input: `${fileName}.ts`,
     output: {
-      format: "es",
       file: `dist/${fileName}.esm.d.ts`,
+      format: "es"
     },
     plugins: dtsPlugin
   };

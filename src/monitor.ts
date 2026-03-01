@@ -14,45 +14,42 @@ export type ColorSchemeCallback = (/** `true` if the element is in dark mode; ot
 
 /** Observes changes in the color scheme of an element. */
 export class ColorSchemeObserver {
-  /** @type {boolean} */
-  private readonly checkColorScheme: boolean;
-  /** @type {ColorSchemeCallback[]} */
-  private readonly callbacks: ColorSchemeCallback[] = [];
-  /** @type {boolean | undefined} */
-  private pervious: boolean | undefined;
+  readonly #checkColorScheme: boolean;
+  readonly #callbacks: ColorSchemeCallback[] = [];
+  #pervious: boolean | undefined;
 
   /** 
    * The style observer for detecting color scheme changes.
    * @remarks `undefined` if {@link ColorSchemeOptions.checkColorScheme} is `false`.
    */
-  public readonly observer: StyleObserver | undefined;
+  readonly observer: StyleObserver | undefined;
 
   /** 
    * The media query list for detecting prefers-color-scheme changes.
    * @remarks `undefined` if the browser not supports `matchMedia`.
    */
-  public readonly scheme: MediaQueryList | undefined;
+  readonly scheme: MediaQueryList | undefined;
 
   /** The element being observed. */
-  public element: HTMLElement;
+  element: HTMLElement;
 
   /**
    * Initializes a new instance of the {@link ColorSchemeObserver} class.
    * @param element The element to observe. Defaults to {@link document.documentElement}.
    * @param options The options for the style observer.
    */
-  public constructor(element: HTMLElement = document.documentElement, options: Partial<ColorSchemeOptions> = {}) {
+  constructor(element: HTMLElement = document.documentElement, options: Partial<ColorSchemeOptions> = {}) {
     this.element = element;
-    this.checkColorScheme = options.checkColorScheme ?? isLightDarkSupported;
-    if (this.checkColorScheme) {
+    this.#checkColorScheme = options.checkColorScheme ?? isLightDarkSupported;
+    if (this.#checkColorScheme) {
       this.observer = new StyleObserver(mutations => {
         for (let i = 0; i < mutations.length; i++) {
           const mutation = mutations[i];
           if (mutation.target instanceof HTMLElement) {
             const isDark = isDarkScheme(mutation.target);
-            if (this.pervious !== isDark) {
-              this.pervious = isDark;
-              this.onColorSchemeChange(isDark);
+            if (this.#pervious !== isDark) {
+              this.#pervious = isDark;
+              this.#onColorSchemeChange(isDark);
             }
           }
         }
@@ -62,83 +59,83 @@ export class ColorSchemeObserver {
     if (isMatchMediaSupported) {
       this.scheme = matchMedia("(prefers-color-scheme: dark)");
       if (this.scheme && this.scheme.media !== "not all") {
-        this.scheme.addListener(this.onListenner);
+        this.scheme.addListener(this.#onListenner);
       }
     }
   }
 
   /** Gets whether there are no registered callbacks. */
-  public get isEmpty() {
-    return !this.callbacks.length;
+  get isEmpty() {
+    return !this.#callbacks.length;
   }
 
   /**
    * Registers a callback for color scheme changes.
    * @param callback The callback to register.
    */
-  public registerCallback(callback: ColorSchemeCallback) {
-    this.callbacks.push(callback);
+  registerCallback(callback: ColorSchemeCallback) {
+    this.#callbacks.push(callback);
   }
 
   /**
    * Unregisters a callback for color scheme changes.
    * @param callback The callback to unregister.
    */
-  public unregisterCallback(callback: ColorSchemeCallback) {
-    const index = this.callbacks.indexOf(callback);
+  unregisterCallback(callback: ColorSchemeCallback) {
+    const index = this.#callbacks.indexOf(callback);
     if (index !== -1) {
-      this.callbacks.splice(index, 1);
+      this.#callbacks.splice(index, 1);
     }
   }
 
   /**
    * Gets whether the specified element is in dark mode.
-   * @param {boolean} isPrefersDark `true` if the prefers-color-scheme is dark; otherwise, `false`.
-   * @param {HTMLElement} element The element to check. Defaults to {@link document.documentElement}.
-   * @returns {boolean} `true` if the element is in dark mode; otherwise, `false`.
+   * @param isPrefersDark `true` if the prefers-color-scheme is dark; otherwise, `false`.
+   * @param element The element to check. Defaults to {@link document.documentElement}.
+   * @returns `true` if the element is in dark mode; otherwise, `false`.
    */
-  private isDarkTheme(isPrefersDark: boolean, element: HTMLElement = document.documentElement): boolean {
-    return this.checkColorScheme ? isDarkScheme(element) : isPrefersDark;
+  #isDarkTheme(isPrefersDark: boolean, element: HTMLElement = document.documentElement): boolean {
+    return this.#checkColorScheme ? isDarkScheme(element) : isPrefersDark;
   }
 
   /**
    * Handles media query list events.
-   * @param {MediaQueryListEvent} ev The media query list event.
+   * @param ev The media query list event.
    */
-  private onListenner = (ev: MediaQueryListEvent) => {
-    const isDark = this.isDarkTheme(ev.matches, this.element);
-    if (this.pervious !== isDark) {
-      this.pervious = isDark;
-      this.onColorSchemeChange(isDark);
+  #onListenner = (ev: MediaQueryListEvent) => {
+    const isDark = this.#isDarkTheme(ev.matches, this.element);
+    if (this.#pervious !== isDark) {
+      this.#pervious = isDark;
+      this.#onColorSchemeChange(isDark);
     }
   }
 
   /**
    * Notifies registered callbacks of color scheme changes.
-   * @param {boolean} isDark `true` if the element is in dark mode; otherwise, `false`.
+   * @param isDark `true` if the element is in dark mode; otherwise, `false`.
    */
-  private onColorSchemeChange(isDark: boolean) {
-    for (let i = 0; i < this.callbacks.length; i++) {
-      this.callbacks[i](isDark);
+  #onColorSchemeChange(isDark: boolean) {
+    for (let i = 0; i < this.#callbacks.length; i++) {
+      this.#callbacks[i](isDark);
     }
   }
 
   /**
    * Clears all registered callbacks.
    */
-  public clear() {
-    this.callbacks.length = 0;
+  clear() {
+    this.#callbacks.length = 0;
   }
 
   /**
    * Disposes the observer.
    */
-  public dispose() {
+  dispose() {
     if (this.observer) {
       this.observer.unobserve();
     }
     if (this.scheme) {
-      this.scheme.removeListener(this.onListenner);
+      this.scheme.removeListener(this.#onListenner);
     }
   }
 }

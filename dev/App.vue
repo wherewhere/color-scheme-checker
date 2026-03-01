@@ -57,6 +57,7 @@
 import "./types";
 import { computed, onMounted, shallowRef, watch } from "vue";
 import { useSeoMeta } from "@unhead/vue";
+import { useAnalytics } from "./helpers/analytics";
 import { isDarkTheme } from "../src/theme";
 import { registerColorSchemeListener } from "../src/monitor";
 import { name, description, keywords, version } from "../package.json";
@@ -93,6 +94,7 @@ useSeoMeta({
   articleAuthor: [author],
   articleTag: keywords
 });
+useAnalytics();
 
 const isDark = shallowRef(false);
 const scheme = shallowRef<string>();
@@ -120,30 +122,19 @@ onMounted(() => {
   @include meta.load-css("highlight.js/scss/vs2015.scss");
 }
 
+$base-transition: background-color 0.083s ease-in-out;
+
 :root {
   --font-monospace: "Cascadia Code NF", "Cascadia Code PL", "Cascadia Code", "Cascadia Next SC", "Cascadia Next TC", "Cascadia Next JP", Consolas, "Courier New", "Liberation Mono", SFMono-Regular, Menlo, Monaco, monospace;
 }
 
 * {
-  transition: background-color 0.083s ease-in-out;
+  transition: $base-transition;
 }
 
 body {
   background: var(--neutral-fill-stealth-rest);
-  padding: 0 16px 16px;
-  transition: padding 0.083s ease-in-out, background-color 0.083s ease-in-out;
-
-  @media (min-width: 640px) {
-    padding: 0 32px 24px;
-  }
-
-  @media (min-width: 1007px) {
-    padding: 0 64px 24px;
-  }
-
-  @media (min-width: 1372px) {
-    padding: 0 128px 24px;
-  }
+  transition: padding 0.083s ease-in-out, $base-transition;
 }
 </style>
 
@@ -180,9 +171,7 @@ body {
 }
 
 :deep(fluent-select)::part(listbox),
-:deep(fluent-select) .listbox,
-:deep(fluent-combobox)::part(listbox),
-:deep(fluent-combobox) .listbox {
+:deep(fluent-combobox)::part(listbox) {
   max-height: calc(var(--base-height-multiplier) * 30px);
 }
 </style>
