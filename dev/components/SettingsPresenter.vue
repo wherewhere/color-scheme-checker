@@ -1,5 +1,5 @@
 <template>
-  <div class="settings-presenter" v-fill-color="fillColor">
+  <div class="settings-presenter">
     <div class="header-root">
       <div class="icon-holder" v-check-solt="$slots.icon">
         <slot name="icon"></slot>
@@ -20,50 +20,45 @@
 </template>
 
 <script lang="ts" setup>
-import { inject } from "vue";
-import type { Swatch } from "@fluentui/web-components";
-import type { DesignToken } from "@microsoft/fast-foundation";
 import vCheckSolt from "../directives/checkSolt";
-import vFillColor from "../directives/fillColor";
-
-const fillColor = inject<DesignToken<Swatch>>("fillColor");
 </script>
 
 <style lang="scss" scoped>
+$settings-card-description-font-size: var(--fontSizeBase200);
+$settings-card-header-icon-max-size: var(--fontSizeBase500);
+$settings-card-header-icon-margin: 0 var(--spacingHorizontalXL) 0 var(--spacingHorizontalXXS);
+$settings-card-vertical-header-content-spacing: var(--spacingVerticalS) 0 0 0;
+
 .settings-presenter {
-  --settings-card-description-font-size: var(--type-ramp-minus-1-font-size);
-  --settings-card-header-icon-max-size: var(--type-ramp-base-line-height);
-  --settings-card-header-icon-margin: 0 calc((var(--base-horizontal-spacing-multiplier) * 6 + var(--design-unit) * 0.5) * 1px) 0 calc((var(--base-horizontal-spacing-multiplier) * 6 - var(--design-unit) * 4) * 1px);
-  --settings-card-vertical-header-content-spacing: calc(var(--design-unit) * 2px) 0 0 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
 
-  :deep(div.header-root) {
+  div.header-root {
     display: flex;
     align-items: center;
     flex: 1;
   }
 
-  :deep(div.icon-holder) {
-    max-width: var(--settings-card-header-icon-max-size);
-    max-height: var(--settings-card-header-icon-max-size);
-    margin: var(--settings-card-header-icon-margin);
+  div.icon-holder {
+    max-width: $settings-card-header-icon-max-size;
+    max-height: $settings-card-header-icon-max-size;
+    margin: $settings-card-header-icon-margin;
     fill: currentColor;
   }
 
-  :deep(div.header-panel) {
+  div.header-panel {
     display: flex;
     flex-direction: column;
-    margin: 0 calc(var(--design-unit) * 6px) 0 0;
+    margin: 0 var(--spacingHorizontalXXL) 0 0;
   }
 
-  :deep(span.description) {
-    font-size: var(--settings-card-description-font-size);
-    color: var(--neutral-fill-strong-hover);
+  span.description {
+    font-size: $settings-card-description-font-size;
+    color: var(--colorNeutralForeground2);
   }
 
-  :deep(div.content-presenter) {
+  div.content-presenter {
     display: grid;
   }
 
@@ -77,12 +72,12 @@ const fillColor = inject<DesignToken<Swatch>>("fillColor");
     justify-content: normal;
     align-items: normal;
 
-    :deep(div.header-panel) {
+    div.header-panel {
       margin: 0;
     }
 
-    :deep(div.content-presenter) {
-      margin: var(--settings-card-vertical-header-content-spacing);
+    div.content-presenter {
+      margin: $settings-card-vertical-header-content-spacing;
     }
 
     .settings-nowarp & {
@@ -90,11 +85,11 @@ const fillColor = inject<DesignToken<Swatch>>("fillColor");
       justify-content: space-between;
       align-items: center;
 
-      :deep(div.header-panel) {
-        margin: 0 calc(var(--design-unit) * 6px) 0 0;
+      div.header-panel {
+        margin: 0 var(--spacingHorizontalXXL) 0 0;
       }
 
-      :deep(div.content-presenter) {
+      div.content-presenter {
         margin: 0;
       }
     }
@@ -104,12 +99,12 @@ const fillColor = inject<DesignToken<Swatch>>("fillColor");
       justify-content: normal;
       align-items: normal;
 
-      :deep(div.header-panel) {
+      div.header-panel {
         margin: 0;
       }
 
-      :deep(div.content-presenter) {
-        margin: var(--settings-card-vertical-header-content-spacing);
+      div.content-presenter {
+        margin: $settings-card-vertical-header-content-spacing;
       }
     }
   }

@@ -1,27 +1,13 @@
-import {
-  provideFluentDesignSystem,
-  fluentAccordion,
-  fluentAccordionItem,
-  fluentCombobox,
-  fluentOption,
-  baseLayerLuminance,
-  StandardLuminance
-} from "@fluentui/web-components";
+import { setTheme } from "@fluentui/web-components";
+import { webDarkTheme, webLightTheme } from "@fluentui/tokens";
 
-provideFluentDesignSystem()
-  .register(
-    fluentAccordion(),
-    fluentAccordionItem(),
-    fluentCombobox(),
-    fluentOption()
-  );
+function applyTheme(isDark: boolean) {
+  setTheme(isDark ? webDarkTheme : webLightTheme);
+}
 
 import { isDarkTheme } from "../src/theme";
 import { registerColorSchemeListener } from "../src/monitor";
 
-function applyTheme(isDark: boolean) {
-  baseLayerLuminance.withDefault(isDark ? StandardLuminance.DarkMode : StandardLuminance.LightMode);
-}
 applyTheme(isDarkTheme());
 registerColorSchemeListener(applyTheme);
 

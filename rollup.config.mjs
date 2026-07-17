@@ -19,7 +19,7 @@ const babelESFallbackConfig = babel({
   babelHelpers: "bundled"
 });
 
-const babelIIFEFallbackConfig = babel({
+const babelUMDFallbackConfig = babel({
   extensions: [".js", ".ts"],
   targets: "supports matchmedia",
   babelHelpers: "bundled"
@@ -29,7 +29,7 @@ const dtsConfig = dts();
 
 const esPlugin = [resolveConfig, babelESConfig];
 const esFallbackPlugin = [resolveConfig, babelESFallbackConfig];
-const iifeFallbackPlugin = [resolveConfig, babelIIFEFallbackConfig];
+const umdFallbackPlugin = [resolveConfig, babelUMDFallbackConfig];
 const dtsPlugin = [dtsConfig];
 
 /**
@@ -70,16 +70,16 @@ function getESBrowserConfig(fileName) {
  * @param {string} name
  * @returns {import("rollup").RollupOptions}
  */
-function getIIFEConfig(fileName, name) {
+function getUMDConfig(fileName, name) {
   return {
     input: `${fileName}.ts`,
     output: {
       file: `dist/${fileName}.global.js`,
-      format: "iife",
+      format: "umd",
       name,
       sourcemap: true
     },
-    plugins: iifeFallbackPlugin
+    plugins: umdFallbackPlugin
   };
 }
 
@@ -110,8 +110,8 @@ function* getJSConfigs(fileName, name, types) {
         yield getESConfig(fileName);
         yield getESBrowserConfig(fileName);
         break;
-      case "iife":
-        yield getIIFEConfig(fileName, name);
+      case "umd":
+        yield getUMDConfig(fileName, name);
         break;
       case "dts":
         yield getDTSConfig(fileName);
@@ -121,5 +121,5 @@ function* getJSConfigs(fileName, name, types) {
 }
 
 export default [
-  ...getJSConfigs("index", "colorSchemeChecker", ["es", "iife", "dts"])
+  ...getJSConfigs("index", "colorSchemeChecker", ["es", "umd", "dts"])
 ];

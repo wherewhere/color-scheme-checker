@@ -6,17 +6,17 @@
 
 <style lang="scss" scoped>
 :deep(h1) {
-  font-size: var(--type-ramp-plus-2-font-size);
-  line-height: var(--type-ramp-plus-2-line-height);
+  font-size: var(--fontSizeBase600);
+  line-height: var(--lineHeightBase600);
 }
 
 :deep(h2) {
-  font-size: var(--type-ramp-plus-1-font-size);
-  line-height: var(--type-ramp-plus-1-line-height);
+  font-size: var(--fontSizeBase500);
+  line-height: var(--lineHeightBase500);
 }
 
 :deep(h3) {
-  font-size: var(--type-ramp-base-font-size);
-  line-height: var(--type-ramp-base-line-height);
+  font-size: var(--fontSizeBase400);
+  line-height: var(--lineHeightBase400);
 }
 </style>

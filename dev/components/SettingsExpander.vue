@@ -1,36 +1,29 @@
 <template>
   <fluent-accordion class="settings-expander">
-    <fluent-accordion-item class="expander" :expanded="expanded">
+    <fluent-accordion-item class="expander" marker-position="end" :expanded="expanded">
       <div slot="heading">
-        <ProvideValue name="fillColor" :value="neutralFillInputRest">
-          <SettingsPresenter class="presenter">
-            <template #icon>
-              <slot name="icon"></slot>
-            </template>
-            <template #header>
-              <slot name="header"></slot>
-            </template>
-            <template #description>
-              <slot name="description"></slot>
-            </template>
-            <slot name="action-content"></slot>
-          </SettingsPresenter>
-        </ProvideValue>
+        <SettingsPresenter class="presenter">
+          <template #icon>
+            <slot name="icon"></slot>
+          </template>
+          <template #header>
+            <slot name="header"></slot>
+          </template>
+          <template #description>
+            <slot name="description"></slot>
+          </template>
+          <slot name="action-content"></slot>
+        </SettingsPresenter>
       </div>
-      <div v-fill-color="neutralFillLayerAltRest">
-        <ProvideValue name="fillColor" :value="undefined">
-          <slot></slot>
-        </ProvideValue>
-      </div>
+      <slot></slot>
     </fluent-accordion-item>
   </fluent-accordion>
 </template>
 
 <script lang="ts" setup>
-import { neutralFillInputRest, neutralFillLayerAltRest } from "@fluentui/web-components";
-import ProvideValue from "./ProvideValue.vue";
+import "@fluentui/web-components/accordion/define.js";
+import "@fluentui/web-components/accordion-item/define.js";
 import SettingsPresenter from "./SettingsPresenter.vue";
-import vFillColor from "../directives/fillColor";
 
 defineProps<{
   expanded?: "true" | "false";
@@ -38,41 +31,74 @@ defineProps<{
 </script>
 
 <style lang="scss" scoped>
+$settings-expander-item-padding-left: 58px;
+$settings-expander-item-padding-right: 44px;
+$settings-expander-header-padding: var(--spacingVerticalL) 0 var(--spacingVerticalL) var(--spacingHorizontalL);
+$settings-expander-item-padding: var(--spacingVerticalS) $settings-expander-item-padding-right var(--spacingVerticalS) $settings-expander-item-padding-left;
+
 .settings-expander {
-  --settings-expander-header-padding: calc(var(--design-unit) * 1px) 0 calc(var(--design-unit) * 1px) calc(var(--design-unit) * 2px);
-  --settings-expander-item-padding: 0 calc((var(--base-height-multiplier) + 1 + var(--density)) * var(--design-unit) * 1px) 0 calc((var(--base-horizontal-spacing-multiplier) * 12 - var(--design-unit) * 1.5) * 1px + var(--type-ramp-base-line-height));
-
-  :deep(fluent-accordion-item.expander) {
+  fluent-accordion-item.expander {
+    max-width: none;
     box-sizing: border-box;
-    box-shadow: var(--elevation-shadow-card-rest);
-    border-radius: calc(var(--control-corner-radius) * 1px);
-  }
-
-  :deep(fluent-accordion-item.expander) {
-    &:hover {
-      background: var(--neutral-fill-input-hover);
-      border: calc(var(--stroke-width) * 1px) solid var(--neutral-stroke-layer-hover);
-      box-shadow: var(--elevation-shadow-card-hover);
-    }
-
-    &:active {
-      background: var(--neutral-fill-input-active);
-      border: calc(var(--stroke-width) * 1px) solid var(--neutral-stroke-layer-active);
-      box-shadow: var(--elevation-shadow-card-active);
-    }
+    background: var(--colorNeutralBackground1);
+    color: var(--colorNeutralForeground1);
+    border: var(--strokeWidthThin) solid var(--colorNeutralStroke1);
+    border-radius: var(--borderRadiusMedium);
+    transition-duration: var(--durationFaster);
+    transition-property: background, border, color;
+    transition-timing-function: var(--curveEasyEase);
 
     &::part(region) {
-      border-bottom-left-radius: calc((var(--control-corner-radius) - var(--stroke-width)) * 1px);
-      border-bottom-right-radius: calc((var(--control-corner-radius) - var(--stroke-width)) * 1px);
+      border-bottom-left-radius: calc(var(--borderRadiusMedium) - 1px);
+      border-bottom-right-radius: calc(var(--borderRadiusMedium) - 1px);
+    }
+
+    &::part(heading),
+    &::part(button) {
+      height: auto;
+    }
+
+    &::part(heading) {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      $padding: 0.5 * $settings-expander-item-padding-right - 10px;
+      padding: 0 $padding 0 0;
+      column-gap: calc($padding - var(--spacingHorizontalS));
+
+      &:hover {
+        background: var(--colorNeutralBackground1Hover);
+      }
+
+      &:active {
+        background: var(--colorNeutralBackground1Pressed);
+      }
+    }
+
+    &::part(button) {
+      flex: 1;
+    }
+
+    &::part(content) {
+      margin: 0;
+      border-top: var(--strokeWidthThin) solid var(--colorNeutralStroke1Hover);
+    }
+
+    &::slotted(.default-marker-expanded) {
+      display: none;
     }
   }
 
-  :deep(.presenter) {
-    padding: var(--settings-expander-header-padding);
+  .presenter {
+    padding: $settings-expander-header-padding;
   }
 
   :deep(div.setting-expander-content-grid) {
-    padding: var(--settings-expander-item-padding);
+    background: var(--colorNeutralBackground1);
+    padding: $settings-expander-item-padding;
+    transition-duration: var(--durationFaster);
+    transition-property: background, border, color;
+    transition-timing-function: var(--curveEasyEase);
   }
 }
 </style>

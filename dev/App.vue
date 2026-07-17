@@ -15,20 +15,17 @@
         <template #description>
           {{ message }}
         </template>
-        <!-- @vue-generic {Combobox, "value" } -->
-        <ValueChangeHost v-model="scheme" value-name="value" event-name="change" style="display: inherit;">
-          <fluent-combobox :current-value="scheme" placeholder="inherit" autocomplete="both" style="min-width: 0;">
-            <fluent-option>normal</fluent-option>
-            <fluent-option>light</fluent-option>
-            <fluent-option>dark</fluent-option>
-            <fluent-option>light dark</fluent-option>
-            <fluent-option>inherit</fluent-option>
-            <fluent-option>initial</fluent-option>
-            <fluent-option>revert</fluent-option>
-            <fluent-option>revert-layer</fluent-option>
-            <fluent-option>unset</fluent-option>
-          </fluent-combobox>
-        </ValueChangeHost>
+        <ComboBox placeholder="inherit" style="min-width: 0;" v-model="scheme">
+          <fluent-option value="normal">normal</fluent-option>
+          <fluent-option value="light">light</fluent-option>
+          <fluent-option value="dark">dark</fluent-option>
+          <fluent-option value="light dark">light dark</fluent-option>
+          <fluent-option value="inherit">inherit</fluent-option>
+          <fluent-option value="initial">initial</fluent-option>
+          <fluent-option value="revert">revert</fluent-option>
+          <fluent-option value="revert-layer">revert-layer</fluent-option>
+          <fluent-option value="unset">unset</fluent-option>
+        </ComboBox>
       </SettingsCard>
     </SettingsGroup>
     <SettingsGroup>
@@ -55,14 +52,14 @@
 
 <script lang="ts" setup>
 import "./types";
+import "@fluentui/web-components/option/define.js";
 import { computed, onMounted, shallowRef, watch } from "vue";
 import { useSeoMeta } from "@unhead/vue";
 import { useAnalytics } from "./helpers/analytics";
 import { isDarkTheme } from "../src/theme";
 import { registerColorSchemeListener } from "../src/monitor";
 import { name, description, keywords, version } from "../package.json";
-import type { Combobox } from "@fluentui/web-components";
-import ValueChangeHost from "./components/ValueChangeHost.vue";
+import ComboBox from "./components/ComboBox.vue";
 import SettingsCard from "./components/SettingsCard.vue";
 import SettingsExpander from "./components/SettingsExpander.vue";
 import SettingsGroup from "./components/SettingsGroup.vue";
@@ -114,26 +111,21 @@ onMounted(() => {
 
 <style lang="scss">
 @use "sass:meta";
-@use "github:microsoft/fluentui-blazor?branch=dev&path=/src/Core/wwwroot/css/reboot.css";
+@use "github:microsoft/fluentui-blazor?branch=dev-v5&path=/src/Core/wwwroot/css/reboot.css";
 @use "highlight.js/scss/vs.scss";
 
 @media (prefers-color-scheme: dark) {
   @include meta.load-css("highlight.js/scss/vs2015.scss");
 }
 
-$base-transition: background-color 0.083s ease-in-out;
-
 :root {
   --font-monospace: "Cascadia Code NF", "Cascadia Code PL", "Cascadia Code", "Cascadia Next SC", "Cascadia Next TC", "Cascadia Next JP", Consolas, "Courier New", "Liberation Mono", SFMono-Regular, Menlo, Monaco, monospace;
 }
 
-* {
-  transition: $base-transition;
-}
-
 body {
-  background: var(--neutral-fill-stealth-rest);
-  transition: padding 0.083s ease-in-out, $base-transition;
+  transition-duration: var(--durationFaster);
+  transition-property: background, border, color, padding;
+  transition-timing-function: var(--curveEasyEase);
 }
 </style>
 

@@ -1,45 +1,40 @@
 <template>
   <div class="settings-card">
-    <ProvideValue name="fillColor" :value="fillColor">
-      <SettingsPresenter class="presenter">
-        <template #icon>
-          <slot name="icon"></slot>
-        </template>
-        <template #header>
-          <slot name="header"></slot>
-        </template>
-        <template #description>
-          <slot name="description"></slot>
-        </template>
-        <slot></slot>
-      </SettingsPresenter>
-    </ProvideValue>
+    <SettingsPresenter class="presenter">
+      <template #icon>
+        <slot name="icon"></slot>
+      </template>
+      <template #header>
+        <slot name="header"></slot>
+      </template>
+      <template #description>
+        <slot name="description"></slot>
+      </template>
+      <slot></slot>
+    </SettingsPresenter>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { inject, shallowRef } from "vue";
-import { neutralFillInputRest, type Swatch } from "@fluentui/web-components";
-import type { DesignToken } from "@microsoft/fast-foundation";
-import ProvideValue from "./ProvideValue.vue";
 import SettingsPresenter from "./SettingsPresenter.vue";
-
-const fillColor = shallowRef(inject<DesignToken<Swatch>>("fillColor", neutralFillInputRest));
 </script>
 
 <style lang="scss" scoped>
+$settings-card-padding: var(--spacingVerticalL) var(--spacingHorizontalL);
+
 .settings-card {
   display: block;
   box-sizing: border-box;
-  background: var(--neutral-fill-input-rest);
-  color: var(--neutral-foreground-rest);
-  border: calc(var(--stroke-width) * 1px) solid var(--neutral-stroke-layer-rest);
-  border-radius: calc(var(--control-corner-radius) * 1px);
-  box-shadow: var(--elevation-shadow-card-rest);
-  --settings-card-padding: calc(var(--design-unit) * 4px);
+  background: var(--colorNeutralBackground1);
+  color: var(--colorNeutralForeground1);
+  border: var(--strokeWidthThin) solid var(--colorNeutralStroke1);
+  border-radius: var(--borderRadiusMedium);
+  transition-duration: var(--durationFaster);
+  transition-property: background, border, color;
+  transition-timing-function: var(--curveEasyEase);
 
-  :deep(.presenter) {
-    padding: var(--settings-card-padding);
+  .presenter {
+    padding: $settings-card-padding;
   }
 }
 </style>
